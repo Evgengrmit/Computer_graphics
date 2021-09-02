@@ -1,0 +1,32 @@
+<HTML>
+<BODY>
+
+<canvas id='lab01' width='500px' height='500px' style='border:1px solid #000000'>
+</canvas>
+
+<script>
+    function line(x, y) {
+        console.log(x, y);
+        ctx.fillStyle = '#ffffff';
+        for (var i = 0; i < 100; i++) {
+            ctx.fillRect(x + i, y + i, 1, 1);
+        }
+        x0++;
+    }
+</script>
+
+<script>
+    var canvas = document.getElementById('lab01');
+    var ctx = canvas.getContext('2d');
+
+    ctx.fillRect(10, 10, 50, 50);
+    ctx.fillStyle = '#ff0000'
+
+    var x0 = 10, y0 = 10;
+    setInterval(function () {
+        line(x0, y0)
+    }, 300);
+</script>
+
+</BODY>
+</HTML>
