@@ -1,4 +1,4 @@
-<HTML>
+<HTML lang="en">
 <BODY>
 
 <canvas id='lab01' width='500px' height='500px' style='border:1px solid #000000'>
@@ -7,9 +7,13 @@
 <script>
     function line(x, y) {
         console.log(x, y);
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = '#002eff';
         for (var i = 0; i < 100; i++) {
             ctx.fillRect(x + i, y + i, 1, 1);
+        }
+        ctx.fillStyle = '#ffffff';
+        for (var j = 0; j < 100; j++) {
+            ctx.fillRect(x-1 + j, y + j, 1, 1);
         }
         x0++;
     }
@@ -19,13 +23,13 @@
     var canvas = document.getElementById('lab01');
     var ctx = canvas.getContext('2d');
 
-    ctx.fillRect(10, 10, 50, 50);
+    ctx.fillRect(10, 10, 100, 100);
     ctx.fillStyle = '#ff0000'
 
     var x0 = 10, y0 = 10;
     setInterval(function () {
         line(x0, y0)
-    }, 300);
+    }, 30);
 </script>
 
 </BODY>
