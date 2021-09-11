@@ -1,85 +1,89 @@
 <HTML lang="en">
 <BODY>
 
-<canvas id='lab02' width='500px' height='500px'>
+<canvas id='lab02' width='800px' height='800px'>
 </canvas>
 <script>
-    function bresenham_line(xstart, ystart, xend, yend) {
+
+    function bresenham_line(context, x_start, y_start, x_end, y_end, colour) {
         /*
-         * xstart, ystart - начало;
-         * xend, yend - конец;
+         * x_start, y_start - начало;
+         * x_end, y_end - конец;
          */
-        ctx.fillStyle = '#002eff';
-        let dx = xend - xstart;
-        let dy = yend - ystart;
-        let incx = Math.sign(dx);
+        console.log(x_end, y_end);
+        ctx.fillStyle = colour;
+        let dx = x_end - x_start;
+        let dy = y_end - y_start;
+
+        let sign_x = Math.sign(dx);
+        let sign_y = Math.sign(dy);
         /*
          * Определяем, в какую сторону нужно будет сдвигаться. Если dx < 0, т.е. отрезок идёт
-         * справа налево по иксу, то incx будет равен -1.
-         * Это будет использоваться в цикле постороения.
+         * справа налево по иксу, то sign_x будет равен -1.
+         * Это будет использоваться в цикле построения.
          */
-        let incy = Math.sign(dy);
+
         /*
          * Аналогично. Если рисуем отрезок снизу вверх -
          * это будет отрицательный сдвиг для y (иначе - положительный).
          */
-        dx = Math.abs(dx);  //далее мы будем сравнивать: "if (dx < dy)"
-        dy = Math.abs(dy);  //поэтому необходимо сделать dx = |dx|; dy = |dy|
-        let pdx, pdy, es, el;
-        if (dx > dy) { //определяем наклон отрезка:
-            /*
-             * Если dx > dy, то значит отрезок "вытянут" вдоль оси икс, т.е. он скорее длинный, чем высокий.
-             * Значит в цикле нужно будет идти по икс (строчка el = dx;), значит "протягивать" прямую по иксу
-             * надо в соответствии с тем, слева направо и справа налево она идёт (pdx = incx;), при этом
-             * по y сдвиг такой отсутствует.
-             */
-            pdx = incx;
-            pdy = 0;
-            es = dy;
-            el = dx;
-        } else {//случай, когда прямая скорее "высокая", чем длинная, т.е. вытянута по оси y
 
-            pdx = 0;
-            pdy = incy;
-            es = dx;
-            el = dy;//тогда в цикле будем двигаться по y
-        }
-        let x = xstart;
-        let y = ystart;
-        let err = 0;
-        //ctx.fillRect(x, y, 1, 1);
-        for (let t = 0; t <= el; t++) {//идём по всем точкам, начиная со второй и до последней
-            err += 2 * es;
-            if (Math.abs(err) >= es) {
-                err -= 2 * el;
-                x += incx;//сдвинуть прямую (сместить вверх или вниз, если цикл проходит по иксам)
-                y += incy;//или сместить влево-вправо, если цикл проходит по y
-            } else {
-                x += pdx;//продолжить тянуть прямую дальше, т.е. сдвинуть влево или вправо, если
-                y += pdy;//цикл идёт по иксу; сдвинуть вверх или вниз, если по y
+        let x = x_start;
+        let y = y_start;
+        let epsilon = 0;
+
+        if (Math.abs(dx) > Math.abs(dy)) {
+            while (x !== x_end) {//идём по всем точкам, начиная со второй и до последней
+                epsilon += 2 * dy;
+                if (Math.abs(epsilon) >= Math.abs(dx)) {
+                    y += sign_y;
+                    epsilon -= 2 * sign_x * sign_y * dx;
+                    //сдвинуть прямую (сместить вверх или вниз, если цикл проходит по иксам)
+                }
+                context.fillRect(x, y, 1, 1);
+                x += sign_x;//или сместить влево-вправо, если цикл проходит по y
             }
-            ctx.fillRect(x, y, 1, 1);
+        } else {
+            while (y !== y_end) {//идём по всем точкам, начиная со второй и до последней
+                epsilon += 2 * dx;
+                if (Math.abs(epsilon) >= Math.abs(dy)) {
+                    epsilon -= 2 * sign_x * sign_y * dy;
+                    x += sign_x;
+                }
+                context.fillRect(x, y, 1, 1);
+                y += sign_y;//сдвинуть прямую (сместить вверх или вниз, если цикл проходит по иксам)
+            }
         }
-
     }
+</script>
 
+<script>
+    function rotation(context, x_start, y_start, radius) {
+        let alpha = ((new Date()).getSeconds() * 6 - 90) % 361;
+        console.log("alpha=" + alpha);
+        let x_end = Math.abs(Math.trunc(x_start + radius * Math.cos(alpha * Math.PI / 180)));
+        let y_end = Math.abs(Math.trunc(y_start + radius * Math.sin(alpha * Math.PI / 180)));
+        bresenham_line(context, x_start, y_start, x_end, y_end, '#1fc731');
+        setInterval(function () {
+            bresenham_line(context, x_start, y_start, x_end, y_end, '#ffffff');
+        }, 1000);
+    }
 </script>
 
 <script>
 
-    var canvas = document.getElementById('lab02');
-    var ctx = canvas.getContext('2d');
-    const x0 = 100, y0 = 100;
-    let a = 0;
-    const l = 100;
-    bresenham_line(x0,y0,200,100)
-    // setInterval(function () {
-    //     let x1 = x0 + Math.trunc(l * Math.cos(a * Math.PI / 180));
-    //     let y1 = y0 + Math.trunc(l * Math.sin(a * Math.PI / 180));
-    //     bresenham_line(x0, y0, x1,y1);
-    //     a+=0.1;
-    //
-    // }, 20);
+    let canvas = document.getElementById('lab02');
+    let ctx = canvas.getContext('2d');
+    const x0 = 300, y0 = 300;
+    const R = 300;
+    ctx.strokeStyle = '#1fc731'
+    ctx.beginPath();
+    ctx.arc(x0, y0, R, 0, 2 * Math.PI, false);
+    ctx.stroke();
+
+    setInterval(function () {
+        rotation(ctx, x0, y0, R)
+    }, 1000);
 
 
 </script>
