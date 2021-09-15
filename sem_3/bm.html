@@ -1,29 +1,28 @@
 <HTML lang="en">
 <BODY>
 
-<canvas id='lab02' width='800px' height='800px'>
+<canvas id="lab03" width="700px" height = "700px">
 </canvas>
+
+<script src="circle.js">
+</script>
 
 <script src="line.js">
 </script>
 
 <script>
-    let canvas = document.getElementById('lab02');
+    let canvas = document.getElementById('lab03');
     let ctx = canvas.getContext('2d');
+
     const x0 = 300, y0 = 300;
-    const R = 300;
-    ctx.strokeStyle = '#1fc731'
-    ctx.beginPath();
-    ctx.arc(x0, y0, R, 0, 2 * Math.PI, false);
-    ctx.stroke();
+    const R = 200;
+
+    drawCircle(x0,y0,R);
 
     setInterval(function () {
         rotation(ctx, x0, y0, R)
     }, 1000);
-
-
 </script>
-
 
 </BODY>
 </HTML>
