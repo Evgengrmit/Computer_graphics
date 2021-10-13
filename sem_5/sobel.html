@@ -5,40 +5,11 @@
     <title>Sobel filter</title>
 </head>
 <body>
-<canvas id='lab05_1' width='100px' height='100px' style="border: 1px solid black"></canvas>
-<canvas id='lab05_2' width="100px" height="100px" style="border: 1px solid black"></canvas>
-<script src="functions.js">
+<canvas id='lab05_1' width='500px' height='500px'></canvas>
+<canvas id='lab05_2' width='500px' height='500px'></canvas>
+<script src='convolution.js'>
 </script>
-<script>
-    let canvas = document.getElementById('lab05_1');
-    let ctx = canvas.getContext('2d');
-
-    let w = 50;
-    let h = 50;
-
-    ctx.fillStyle = '#f31212'
-    ctx.fillRect(10, 10, 10, 10);
-    let imgData = ctx.getImageData(0, 0, w, h);
-    console.log(imgData.data[h * 10 * 4 + 10 * 4], imgData.data[h * 10 * 4 + 10 * 4 + 1]);
-
-    let canvas_s = document.getElementById("lab05_2");
-    let ctx_s = canvas_s.getContext('2d');
-    let imgData_s = imgData;
-
-
-    for (let i = 1; i < h - 1; i++) {
-        for (let j = 1; j < w - 1; j++) {
-            let fx = Fx(imgData, w, h, j, i);
-            let fy = Fy(imgData, w, h, j, i);
-            imgData_s.data[j * 4 + i * w * 4 + 3] = Math.sqrt(fx * fx + fy * fy);
-        }
-    }
-
-    for (let i = 0; i < 10; i++) {
-        imgData_s.data[i * 4 + i * 200] = 255;
-        imgData_s.data[3 + i * 4 + i * 200] = 255;
-    }
-    ctx_s.putImageData(imgData_s, 0, 0);
+<script src='canvas.js'>
 </script>
 </body>
 </html>
