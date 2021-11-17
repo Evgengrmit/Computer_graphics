@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <p>Сначала ЛКМ строится многоугольник,
         по нажатию ПКМ от достраивает последний кусок.
-        После этого по 2 щелчку ЛКМ заполняется полигон</p>
+        После этого по 2 щелчку ЛКМ заполняется полигон</p><title></title>
 </head>
 <BODY>
 <canvas id="canvas" width="800" height="800">
@@ -52,7 +52,7 @@
 
     });
 
-    canvas.addEventListener('contextmenu', function (event) {
+    canvas.addEventListener('contextmenu', function () {
         if (state === 1) {
             draw_line(ctx, polygon_start_x_tmp, polygon_start_y_tmp, polygon_start_x, polygon_start_y);
             polygon_lines.set([polygon_start_x_tmp, polygon_start_y_tmp], [polygon_start_x, polygon_start_y])
