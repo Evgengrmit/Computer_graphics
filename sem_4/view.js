@@ -18,7 +18,7 @@ canvas.addEventListener("click", function (event) {
     } else if (state === 1) {
         polygon_end_x = event.offsetX;
         polygon_end_y = event.offsetY;
-        Line(ctx, polygon_start_x_tmp, polygon_start_y_tmp, polygon_end_x, polygon_end_y);
+        draw_line(ctx, polygon_start_x_tmp, polygon_start_y_tmp, polygon_end_x, polygon_end_y);
         polygon_lines.set([polygon_start_x_tmp, polygon_start_y_tmp], [polygon_end_x, polygon_end_y]);
         polygon_start_x_tmp = event.offsetX;
         polygon_start_y_tmp = event.offsetY;
@@ -32,7 +32,7 @@ canvas.addEventListener("click", function (event) {
         line_end_y = event.offsetY;
         let t1 = -1, t2 = -1;
         let key_start = -1, key_end = -1;
-        Line(ctx, line_start_x, line_start_y, line_end_x, line_end_y, "#002eff");
+        draw_line(ctx, line_start_x, line_start_y, line_end_x, line_end_y, "#002eff");
         for (let key of polygon_lines.keys()) {
             if (t1 === -1) {
                 t1 = ((line_start_y - line_end_y) * (key[0] - line_start_x) + (line_end_x - line_start_x)
@@ -62,9 +62,9 @@ canvas.addEventListener("click", function (event) {
                 let eraser_end_y = (polygon_lines.get(key_end)[1] - key_end[1]) * t2 + key_end[1];
 
                 for (let i = 0; i < 10; i += 1) {
-                    Line(ctx, eraser_start_x, eraser_start_y, eraser_end_x, eraser_end_y, "#ffffff");
+                    draw_line(ctx, eraser_start_x, eraser_start_y, eraser_end_x, eraser_end_y, "#ffffff");
                 }
-                Line(ctx, polygon_lines.get(key_start)[0], polygon_lines.get(key_start)[1], key_start[0], key_start[1], "#000000")
+                draw_line(ctx, polygon_lines.get(key_start)[0], polygon_lines.get(key_start)[1], key_start[0], key_start[1], "#000000")
                 break;
             }
         }
@@ -75,7 +75,7 @@ canvas.addEventListener("click", function (event) {
 
 canvas.addEventListener('contextmenu', function () {
     if (state === 1) {
-        Line(ctx, polygon_start_x_tmp, polygon_start_y_tmp, polygon_start_x, polygon_start_y, "#000000");
+        draw_line(ctx, polygon_start_x_tmp, polygon_start_y_tmp, polygon_start_x, polygon_start_y, "#000000");
         polygon_lines.set([polygon_start_x_tmp, polygon_start_y_tmp], [polygon_start_x, polygon_start_y])
         state = 2;
     }

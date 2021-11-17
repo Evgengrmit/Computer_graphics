@@ -1,7 +1,7 @@
 let canvas = document.getElementById('lab05_1');
 let ctx = canvas.getContext('2d');
 var img = new Image();
-img.src = "png-clipart-puppy-puppy-animal.png";
+img.src = "Colosseum-Rome.jpg";
 let w = 500;
 let h = 500;
 img.onload = function () {
