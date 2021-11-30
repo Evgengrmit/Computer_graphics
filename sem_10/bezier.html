@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <h1>Кривая Безье</h1>
+    <h4> Сначала ЛКМ строится нужное число точек,
+        по нажатию ЛКМ и ПКМ достраивается линия Безье
+    </h4>
+
+</head>
+<BODY>
+<canvas id="lab10" width="800" height="800" style='border:1px solid #000000'>
+</canvas>
+<script src="bezier.js"> </script>
+<script>
+    const canvas = document.getElementById("lab10");
+    const ctx = canvas.getContext("2d");
+    let x = 0;
+    let y = 0;
+    const arr = []; // массив точек
+
+    canvas.addEventListener("click", function (event) {
+        x = event.offsetX
+        y = event.offsetY
+        arr.push([x, y])
+        ctx.fillRect(x, y, 3, 3)
+    });
+
+    canvas.addEventListener('contextmenu', function (event) {
+        let flow = getBezierCurve(arr, 0.01);
+        for (let i = 0; i < flow.length; i += 1) {
+            Line(ctx, flow[i][0], flow[i][1], flow[i + 1][0], flow[i + 1][1])
+        }
+    });
+
+</script>
+</BODY>
+</html>
