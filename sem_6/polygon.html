@@ -1,0 +1,61 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <p>Сначала ЛКМ строятся точки многоугольника,
+        После этого по щелчку ЛКМ заполняется полигон</p>
+</head>
+<body>
+
+<canvas id='canv' width='500' height='500' style='border:1px solid'></canvas>
+<script src='fill.js'>
+</script>
+<script>
+    let canvas = document.getElementById("canv");
+    let ctx = canvas.getContext("2d");
+    ctx.fillStyle = '#1b45de';
+    let state = 0;
+    let polygon_start_x_tmp, polygon_start_y_tmp;
+    let polygon_start_x, polygon_start_y;
+    let polygon_end_x, polygon_end_y;
+    let vertices = [];
+
+    canvas.addEventListener("click", function (event) {           // обрабтка нажатия ЛКМ
+
+        if (state === 0) {
+            vertices.push(new Point(event.offsetX, event.offsetY)); // добавляем новую точку в массив точек
+            ctx.fillRect(event.offsetX, event.offsetY, 2, 2);       // зарисовываем точку
+            polygon_start_x_tmp = event.offsetX;
+            polygon_start_y_tmp = event.offsetY;
+            polygon_start_x = event.offsetX;
+            polygon_start_y = event.offsetY;
+            state = 1;
+        } else if (state === 1) {
+            polygon_end_x = event.offsetX;
+            polygon_end_y = event.offsetY;
+            Line(ctx, polygon_start_x_tmp, polygon_start_y_tmp, polygon_end_x, polygon_end_y);
+            polygon_start_x_tmp = event.offsetX;
+            polygon_start_y_tmp = event.offsetY;
+            vertices.push(new Point(event.offsetX, event.offsetY)); // добавляем новую точку в массив точек
+            state = 1;
+        }
+
+        if (state === 2) {
+            FillPolygon(ctx, vertices);
+            vertices = [];
+        }
+
+    })
+
+    canvas.addEventListener("contextmenu", function () {        // обрабтка нажатия ПКМ
+        if (state === 1) {
+            Line(ctx, polygon_start_x_tmp, polygon_start_y_tmp, polygon_start_x, polygon_start_y);
+            state = 2;
+            console.log(state)
+        }
+
+
+    })
+
+</script>
+
+</body>
