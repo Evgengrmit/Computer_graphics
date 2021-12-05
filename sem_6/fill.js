@@ -39,35 +39,36 @@
             }
         }
  function Line(ctx, x0, y0, x1, y1) {
-        var dy = Math.abs(y1 - y0);
-        var dx = Math.abs(x1 - x0);
-        var dmax = Math.max(dx, dy);
-        var dmin = Math.min(dx, dy);
-        var xdir = 1;
-        if (x1 < x0) xdir = -1;
-        var ydir = 1;
-        if (y1 < y0) ydir = -1;
-        var eps = 0;
-        var s = 1;
-        var k = 2 * dmin;
-        if (dy <= dx) {
-            var y = y0;
-            for (var x = x0; x * xdir <= x1 * xdir; x += xdir) {
-                ctx.fillRect(x * s, y * s, 1 * s, 1 * s);
+     let x;
+     let y;
+     const dy = Math.abs(y1 - y0);
+     const dx = Math.abs(x1 - x0);
+     const d_max = Math.max(dx, dy);
+     const d_min = Math.min(dx, dy);
+     let x_dir = 1;
+     if (x1 < x0) x_dir = -1;
+     let y_dir = 1;
+     if (y1 < y0) y_dir = -1;
+     let eps = 0;
+     const k = 2 * d_min;
+     if (dy <= dx) {
+         y = y0;
+         for (x = x0; x * x_dir <= x1 * x_dir; x += x_dir) {
+                ctx.fillRect(x , y , 1, 1);
                 eps = eps + k;
-                if (eps > dmax) {
-                    y += ydir;
-                    eps = eps - 2 * dmax;
+                if (eps > d_max) {
+                    y += y_dir;
+                    eps = eps - 2 * d_max;
                 }
             }
         } else {
-            var x = x0;
-            for (var y = y0; y * ydir <= y1 * ydir; y += ydir) {
-                ctx.fillRect(x * s, y * s, 1 * s, 1 * s);
+         x = x0;
+         for (y = y0; y * y_dir <= y1 * y_dir; y += y_dir) {
+                ctx.fillRect(x , y , 1, 1);
                 eps = eps + k;
-                if (eps > dmax) {
-                    x += xdir;
-                    eps = eps - 2 * dmax;
+                if (eps > d_max) {
+                    x += x_dir;
+                    eps = eps - 2 * d_max;
                 }
             }
         }
