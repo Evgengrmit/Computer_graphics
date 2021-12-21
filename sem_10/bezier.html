@@ -1,39 +1,129 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <title></title>
-    <meta charset="UTF-8">
-    <h1>Кривая Безье</h1>
-    <h4> Сначала ЛКМ строится нужное число точек,
-        по нажатию ЛКМ и ПКМ достраивается линия Безье
-    </h4>
-
-</head>
+<HTML>
 <BODY>
-<canvas id="lab10" width="800" height="800" style='border:1px solid #000000'>
+
+<canvas id='lab01' width='500px' height='500px' style='border:1px solid black'>
 </canvas>
-<script src="bezier.js"> </script>
 <script>
-    const canvas = document.getElementById("lab10");
-    const ctx = canvas.getContext("2d");
-    let x = 0;
-    let y = 0;
-    const arr = []; // массив точек
+	function line(x, y) {
+		console.log(x, y);
+		ctx.fillStyle= '#FFFFFF';
+		for (var i=0; i<100; i++) {
+			ctx.fillRect(x+i-1, y+i, 1, 1);
+		}
+		ctx.fillStyle= '#FF0000';
+		for (var i=0; i<100; i++) {
+			ctx.fillRect(x+i, y+i, 1, 1);
+		}
+		x0++;
+	}
+</script>
+<script>
+	var canvas = document.getElementById('lab01');
+	var ctx = canvas.getContext('2d');
 
-    canvas.addEventListener("click", function (event) {
-        x = event.offsetX
-        y = event.offsetY
-        arr.push([x, y])
-        ctx.fillRect(x, y, 3, 3)
-    });
+	var dim = 3;
+	var alpha60 = 60*Math.PI/180;
+	var alpha30 = 10*Math.PI/180;
 
-    canvas.addEventListener('contextmenu', function (event) {
-        let flow = getBezierCurve(arr, 0.01);
-        for (let i = 0; i < flow.length; i += 1) {
-            Line(ctx, flow[i][0], flow[i][1], flow[i + 1][0], flow[i + 1][1])
-        }
-    });
+	var M = [
+			Math.cos(alpha60), 0, -1*Math.sin(alpha60), 0,
+			0, 1, 0, 0,
+			Math.sin(alpha60), 0, Math.cos(alpha60), 0,
+			0, 0, 0, 1
+		];
+	var Mx = [
+			1, 0, 0, 0,
+			0, Math.cos(alpha30), -1*Math.sin(alpha30), 0,
+			0, Math.sin(alpha30), Math.cos(alpha30), 0,
+			0, 0, 0, 1
+		];
+
+
+	function MV_mul(M, v) {
+		var res = [];
+		for (var i=0; i<dim+1; i++) {
+			var aij = 0;
+			for (var j=0; j<dim+1; j++) {
+				aij += M[i*(dim+1)+j]*v[j];
+			}
+			res.push(aij);
+		}
+		return res;
+	}
+
+	function MM_mul(M1, M2) {
+		var res = [];
+		for (var i=0; i<dim+1; i++) {
+			for (var j=0; j<dim+1; j++) {
+				var aij = 0;
+				for (var k=0; k<dim+1; k++) {
+					aij += M1[i*(dim+1)+k]*M2[k*(dim+1)+j];
+				}
+				res.push(aij);
+			}
+		}
+		return res;
+	}
+
+	function distance(P0, P1, P2) {
+		var k = (P2.y-P0.y)/(P2.x-P0.x);
+		var n = {x:-k, y:1};
+		var b = P0.y-k*P0.x;
+		var d = Math.abs(n.x*P1.x+P1.y-b)/Math.sqrt(k*k+1);
+		return d;
+	}
+
+	function bezie(P0, P1, P2){
+		var v = [];
+		var v_tmp = [];
+		if (distance(P0, P1, P2)>=1) {
+			var P0_ = {x:0.5*(P0.x+P1.x), y:0.5*(P0.y+P1.y), z:0};
+			var P1_ = {x:0.5*(P2.x+P1.x), y:0.5*(P2.y+P1.y), z:0};
+			var P0__ = {x:0.5*(P0_.x+P1_.x), y:0.5*(P0_.y+P1_.y), z:0};
+			v_tmp = bezie(P0, P0_, P0__);
+			for (var i = 0; i<v_tmp.length; i++) {
+				v.push(v_tmp[i]);
+			}
+			v_tmp = bezie(P0__, P1_, P2);
+			for (var i = 0; i<v_tmp.length; i++) {
+				v.push(v_tmp[i]);
+			}
+			return v;
+		} else {
+			ctx.moveTo(P0.x, P0.y);
+			ctx.lineTo(P2.x, P2.y);
+			return [P0, P2];
+		}
+	}
+
+	var P0 = {x:300, y:10, z:0};
+	var P1 = {x:10, y:100, z:0};
+	var P2 = {x:350, y:400, z:0};
+	var Rot = MM_mul(M, Mx);
+	var v = [];
+	var v_tmp = [];
+
+	v = bezie(P0, P1, P2);
+
+	var prev = [];
+	for (var j=0; j<1; j++) {
+		for (var i=0; i<v.length; i++) {
+			console.log(v);
+			var ret = MV_mul(M, [v[i].x, v[i].y, v[i].z, 1]);
+			console.log(ret);
+			v_tmp.push({x:ret[0], y:ret[1], z:ret[2]});
+			ret = MV_mul(Mx, ret);
+			if (prev.length) {
+				ctx.moveTo(ret[0], ret[1]);
+				ctx.lineTo(prev[0], prev[1]);
+			}
+			prev[0] = ret[0]; prev[1] = ret[1];
+		}
+		v = v_tmp;
+	}
+	ctx.stroke();
 
 </script>
+
 </BODY>
-</html>
+</HTML>
